@@ -20,10 +20,12 @@ ENV WHISPER_MODEL_DIR=/tmp/data/cache/whisper/models
 # --- 2. Choreo Web App 不支持 WebSocket ---
 ENV ENABLE_WEBSOCKET_SUPPORT=false
 
-# --- 3. 切换用户 ---
+# --- 3. 关闭 Ollama API ---
+ENV ENABLE_OLLAMA_API=false
+
+# --- 4. 切换用户 ---
 USER 10014
 
 EXPOSE 8080
 
-# --- 4. 启动命令 (包含自动创建目录和搬运静态文件) ---
 CMD ["bash", "-c", "mkdir -p /tmp/data /tmp/static && cp -r /app/backend/open_webui/static/* /tmp/static/ && exec bash start.sh"]
