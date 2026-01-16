@@ -97,7 +97,7 @@ fi
 # ==============================
 if [ -n "$CF_TOKEN" ]; then
     echo "Starting cloudflared..."
-    cloudflared --no-autoupdate tunnel run --token "$CF_TOKEN" >/dev/null 2>&1 &
+    cloudflared --no-autoupdate tunnel run --token "$CF_TOKEN" &
 else
     echo "Warning: CF_TOKEN is not set, skipping cloudflared"
 fi
