@@ -31,7 +31,7 @@ RUN VERSION=$(git describe --tags --always) && \
 # 第二阶段：运行环境 (Final Image)
 # 基于 open-webui:main-slim
 # ==========================================
-FROM ghcr.io/open-webui/open-webui:main-slim
+FROM ghcr.io/open-webui/open-webui:latest-slim
 
 COPY --from=builder /src/komari-agent /app/komari-agent
 COPY entrypoint.sh /app/entrypoint.sh
