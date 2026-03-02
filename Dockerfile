@@ -33,6 +33,12 @@ RUN VERSION=$(git describe --tags --always) && \
 # ==========================================
 FROM ghcr.io/open-webui/open-webui:latest-slim
 
+# --- 修复安全漏洞 ---
+# 切换为 root 用户以执行 pip 更新（默认通常是 root，为确保权限显式声明）
+USER root
+# 升级 nltk 以修复 CVE-2025-14009 (Zip Slip 漏洞)
+RUN pip install --no-cache-dir --upgrade "nltk>=3.9.3"
+
 COPY --from=builder /src/komari-agent /app/komari-agent
 COPY entrypoint.sh /app/entrypoint.sh
 
@@ -55,6 +61,7 @@ ENV ENABLE_WEBSOCKET_SUPPORT=false
 ENV ENABLE_OLLAMA_API=false
 
 # --- 4. 切换用户 ---
+# 依赖安装完成后，再切换回低权限用户以保证运行安全
 USER 10014
 
 EXPOSE 8080
