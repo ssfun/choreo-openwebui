@@ -2,18 +2,15 @@
 
 # Version
 
-v0.8.5
+v0.8.7
 
 # Releases
 
-## [0.8.5] - 2026-02-23
-
-### Added
-
-- ⌨️ **Voice dictation shortcut.** Users can now toggle voice dictation using Cmd+Shift+L (or Ctrl+Shift+L on Windows/Linux), making it faster to start and stop dictation without clicking the microphone button.
+## [0.8.7] - 2026-03-01
 
 ### Fixed
 
-- 🚫 **Model access KeyError fix.** The /api/models endpoint no longer crashes with a 500 error when models have incomplete info metadata missing the user_id field (e.g. models using global default metadata).
-- 🔄 **Frontend initialization resilience.** The app layout now gracefully handles individual API failures during initialization (getModels, getBanners, getTools, getUserSettings, setToolServers) instead of blocking the entire page load when any single call fails.
-- 🛡️ **Backend config null safety.** Language detection during app initialization no longer crashes when the backend config fetch fails, preventing a secondary cause of infinite loading.
+- 🔒 **Connection access control privacy.** Tool server and terminal connections without explicit access grants are now private (admin-only) by default, fixing a bug where connections configured with no access grants were visible to all users instead of being restricted. [Commit](https://github.com/open-webui/open-webui/commit/2751a0f0b)
+- 🧠 **ChatControls memory leak.** The ChatControls panel no longer leaks event listeners, ResizeObserver instances, and media query handlers when navigating between chats, fixing memory accumulation that could degrade performance during extended use. [#22112](https://github.com/open-webui/open-webui/pull/22112)
+- 💾 **Temporary chat params preservation.** Model parameters are now correctly saved when creating a temporary chat, ensuring custom settings like temperature and top_p persist across the session. [Commit](https://github.com/open-webui/open-webui/commit/fe837d80e)
+- ⚡ **Faster artifact content updates.** Artifact content extraction during streaming is now debounced via requestAnimationFrame, reducing redundant DOM reads and improving CPU efficiency when tokens arrive faster than the browser can paint. [Commit](https://github.com/open-webui/open-webui/commit/6863ca482)
