@@ -2,28 +2,39 @@
 
 # Version
 
-v0.8.8
+v0.8.10
 
 # Releases
 
-## [0.8.8] - 2026-03-02
 
 ### Added
 
-- 📁 **Open Terminal file moving.** Users can now move files and folders between directories in the Open Terminal file browser by dragging and dropping them. [Commit](https://github.com/open-webui/open-webui/commit/0c42cd2c012f9f49816adac897e2b46573b3cb6c), [Commit](https://github.com/open-webui/open-webui/commit/72951324dfeef64e09f4776898d675bc1c44f040), [Commit](https://github.com/open-webui/open-webui/commit/395098c6f1b7499d37ad55145a5931431d3e72e9), [Commit](https://github.com/open-webui/open-webui/commit/11487d66fc1a2dfafbdaa2b7ef939a86caaf3872)
-- 📄 **Open Terminal HTML file preview.** Users can now preview HTML files directly in the Open Terminal file browser, with a rendered iframe view and source toggle, enabling iterative AI editing of HTML files. [Commit](https://github.com/open-webui/open-webui/commit/3909b62ffcf49839fa57346ed8487ae759811503), [Commit](https://github.com/open-webui/open-webui/commit/933a3bbbd3f4fc3eeb0ec52c7965e9ac1c4cea39)
-- 🌐 **Open Terminal WebSocket proxy.** Added a new WebSocket proxy endpoint for interactive terminal sessions, enabling real-time bidirectional terminal communication with the terminal server. [Commit](https://github.com/open-webui/open-webui/commit/4f6cb771f1afded09aad6199cdb244dd8a6c77a6)
-- ⚙️ **Open Terminal feature toggle.** Administrators can now enable or disable the Interactive Terminal feature for Open Terminal via configuration on the terminal server, controlling access to terminal routes. [Commit](https://github.com/open-webui/open-webui/commit/b5c3395f79bcc7ff5bc1d82bb86a60583bb3b5bd)
+- 🔐 **Custom OIDC logout endpoint.** Administrators can now configure a custom OpenID Connect logout URL via OPENID_END_SESSION_ENDPOINT, enabling logout functionality for OIDC providers that require custom endpoints like AWS Cognito. [Commit](https://github.com/open-webui/open-webui/commit/3f350f865920daf2844769a758b2d2e6a7ee3efa)
+- 🗄️ **MariaDB Vector community support.** Added MariaDB Vector as a new vector database backend, enabling deployments with VECTOR_DB=mariadb-vector; supports cosine and euclidean distance strategies with configurable HNSW indexing. [#21931](https://github.com/open-webui/open-webui/pull/21931)
+- 📝 **Task message truncation.** Chat messages sent to task models for title and tag generation can now be truncated using a filter in the prompt template, reducing token usage and processing time for long conversations. [#21499](https://github.com/open-webui/open-webui/issues/21499)
 - 🔄 **General improvements.** Various improvements were implemented across the application to enhance performance, stability, and security.
-- 🌐 Translations for Simplified Chinese, Traditional Chinese, Irish, and Catalan were enhanced and expanded.
+- 🌐 Translations for Portuguese (Brazil), Spanish, and Malay were enhanced and expanded.
 
 ### Fixed
 
-- 🔧 **Middleware variable shadowing.** Fixed a variable shadowing issue in the middleware that could cause incorrect tool output processing during chat. [#22145](https://github.com/open-webui/open-webui/pull/22145)
-- ⚡ **ChatControls reactivity fix.** Fixed a Svelte reactivity issue where the active tab state in the ChatControls panel was not properly saved when switching between chats. [#22127](https://github.com/open-webui/open-webui/pull/22127)
-- 🔧 **ChatControls TypeScript fix.** Fixed a TypeScript syntax error in ChatControls.svelte where the module script block was missing lang="ts", causing esbuild to fail during vite dev. [#22131](https://github.com/open-webui/open-webui/pull/22131)
-- 🔌 **Open Terminal tools for direct connections.** Fixed an issue where Open Terminal tools were not available to the model when the terminal was configured via direct connection settings, ensuring users can now interact with terminal files and operations through the AI. [#22137](https://github.com/open-webui/open-webui/issues/22137)
-- 📜 **Chat history pagination.** Fixed an issue where older messages in long chats were not loaded when scrolling to the top. [Commit](https://github.com/open-webui/open-webui/commit/d7147d6cddfd314f0f1be77b15cec406a609ef36), [Commit](https://github.com/open-webui/open-webui/commit/c701ebe07bd152eecb42b0bf6de26071358a5c76)
-- 🔧 **Terminal tool null parameter handling.** Fixed a bug where null parameters in terminal tool calls were sent as the string "None" instead of being omitted, causing 422 validation errors from the open-terminal server. [#22124](https://github.com/open-webui/open-webui/issues/22124), [#22144](https://github.com/open-webui/open-webui/pull/22144)
+- 🔗 **Pipeline filter HTTP errors.** Fixed a bug where HTTP errors in pipeline inlet/outlet filters would silently corrupt the user's chat payload; errors are now properly raised before parsing the response. [#22445](https://github.com/open-webui/open-webui/pull/22445)
+- 📚 **Knowledge file embedding updates.** Fixed a bug where updating knowledge files left old embeddings in the database, causing search results to include duplicate and stale data. [#20558](https://github.com/open-webui/open-webui/issues/20558)
+- 📁 **Files list stability.** Fixed the files list ordering to use created_at with id as secondary sort, ensuring consistent ordering and preventing page crashes when managing many files. [#21879](https://github.com/open-webui/open-webui/issues/21879)
+- 📨 **Teams webhook crash.** Fixed a TypeError crash in the Teams webhook handler when user data is missing from the event payload. [#22444](https://github.com/open-webui/open-webui/pull/22444)
+- 🛠️ **Process shutdown handling.** Fixed bare except clauses in the main process that prevented clean shutdown; replaced with proper exception handling. [#22423](https://github.com/open-webui/open-webui/pull/22423)
+- 🐳 **Docker deployment startup.** Docker deployments now start correctly; the missing OpenTelemetry system metrics dependency was added. [#22447](https://github.com/open-webui/open-webui/pull/22447), [#22401](https://github.com/open-webui/open-webui/issues/22401)
+- 🛠️ **Tool access for non-admin users.** Fixed a NameError that prevented non-admin users from viewing tools; the missing has_access function is now properly imported. [#22393](https://github.com/open-webui/open-webui/issues/22393)
+- 🔐 **OAuth error handling.** Fixed a bug where bare except clauses silently caught SystemExit and KeyboardInterrupt, preventing clean process shutdown during OAuth authentication. [#22420](https://github.com/open-webui/open-webui/pull/22420)
+- 🛠️ **Exception error messages.** Fixed three locations where incorrect exception raising caused confusing TypeError messages instead of proper error descriptions, making debugging much easier. [#22446](https://github.com/open-webui/open-webui/pull/22446)
+- 📄 **YAML file processing.** Fixed an error when uploading YAML files with Docling enabled; YAML and YML files are now properly recognized as text files and processed correctly. [#22399](https://github.com/open-webui/open-webui/pull/22399), [#22263](https://github.com/open-webui/open-webui/issues/22263)
+- 📅 **Time range month names.** Fixed month names in time range labels appearing in the wrong language when OS regional settings differ from browser language; month names now consistently display in English. [#22454](https://github.com/open-webui/open-webui/pull/22454)
+- 🔐 **OAuth error URL encoding.** Fixed OAuth error messages with special characters causing malformed redirect URLs; error messages are now properly URL-encoded. [#22415](https://github.com/open-webui/open-webui/pull/22415)
+- 🛠️ **Internal tool method filtering.** Tools no longer expose internal methods starting with underscore to the LLM, reducing clutter and improving accuracy. [#22408](https://github.com/open-webui/open-webui/pull/22408)
+- 🔊 **Azure TTS locale extraction.** Fixed Azure text-to-speech using incomplete locale codes in SSML; now correctly uses full locale like "en-US" instead of just "en". [#22443](https://github.com/open-webui/open-webui/pull/22443)
+- 🎤 **Azure speech transcription errors.** Improved Azure AI Speech error handling to display user-friendly messages instead of generic connection errors; empty transcripts, no language identified, and other Azure-specific errors now show clear descriptions. [#20485](https://github.com/open-webui/open-webui/issues/20485)
+- 📊 **Analytics group filtering.** Fixed token usage analytics not being filtered by user group; the query now properly respects group filters like other analytics metrics. [#22167](https://github.com/open-webui/open-webui/pull/22167)
+- 🔍 **Web search favicon fallback.** Fixed web search sources showing broken image icons when favicons couldn't be loaded from external sources; now falls back to the default Open WebUI favicon. [#21897](https://github.com/open-webui/open-webui/pull/21897)
+- 🔄 **Custom model fallback.** Fixed custom model fallback not working when the base model is unavailable; the base model ID is now correctly retrieved from model info instead of empty params. [#22456](https://github.com/open-webui/open-webui/issues/22456)
+- 🖼️ **Pending message image display.** Fixed images in queued messages appearing blank; image thumbnails are now properly displayed in the pending message queue. [#22256](https://github.com/open-webui/open-webui/issues/22256)
+- 🛠️ **File metadata sanitization.** Fixed file uploads failing with JSON serialization errors when metadata contained non-serializable objects like callable functions; metadata is now sanitized before database insertion. [#20561](https://github.com/open-webui/open-webui/issues/20561)
 
-### Changed
