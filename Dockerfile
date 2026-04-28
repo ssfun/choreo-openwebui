@@ -34,8 +34,16 @@ RUN VERSION=$(git describe --tags --always) && \
 FROM ghcr.io/open-webui/open-webui:latest-slim
 
 # --- 修复安全漏洞 ---
-# 切换为 root 用户以执行 pip 更新（默认通常是 root，为确保权限显式声明）
+# 切换为 root 用户以升级系统/Python 依赖
 USER root
+# 升级 Debian 安全修复包，避免 Choreo Trivy 扫描命中旧版 OpenSSL/kernel headers
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends --only-upgrade \
+        openssl \
+        libssl3 \
+        libssl-dev \
+        linux-libc-dev && \
+    rm -rf /var/lib/apt/lists/*
 # 升级 nltk 以修复 CVE-2025-14009 (Zip Slip 漏洞)
 RUN pip install --no-cache-dir --upgrade "nltk>=3.9.3"
 
