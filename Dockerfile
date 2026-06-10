@@ -36,13 +36,11 @@ FROM ghcr.io/open-webui/open-webui:latest-slim
 # --- 修复安全漏洞 ---
 # 切换为 root 用户以升级系统/Python 依赖
 USER root
-# 升级 Debian 安全修复包，避免 Choreo Trivy 扫描命中旧版 OpenSSL/kernel headers
+# 对系统层做全量安全升级，修复 libgnutls30 等 Debian 包漏洞。
+# 这样系统库每次重建都会自动吃到最新补丁，不必再为每个新报的 CVE
+# 单独点名升级（配合定期重建效果最佳）。
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends --only-upgrade \
-        openssl \
-        libssl3 \
-        libssl-dev \
-        linux-libc-dev && \
+    apt-get -y upgrade && \
     rm -rf /var/lib/apt/lists/*
 # 升级 nltk 以修复 CVE-2025-14009 (Zip Slip 漏洞)
 RUN pip install --no-cache-dir --upgrade "nltk>=3.9.3"
