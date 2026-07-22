@@ -1,34 +1,4 @@
 # ==========================================
-# 阶段 1: 构建阶段 (Builder)
-# ==========================================
-FROM golang:alpine AS builder
-
-WORKDIR /src
-
-# 安装 git
-RUN apk add --no-cache git
-
-# 1. 拉取源码
-RUN git clone https://github.com/komari-monitor/komari-agent.git .
-
-# 2. 检出最新的 Tag
-RUN git fetch --tags && \
-    LATEST_TAG=$(git describe --tags --abbrev=0) && \
-    git checkout $LATEST_TAG
-
-# 3. 编译并注入版本号
-RUN VERSION=$(git describe --tags --always) && \
-    echo "--------------------------------------" && \
-    echo "正在构建版本: $VERSION" && \
-    echo "--------------------------------------" && \
-    go mod download && \
-    CGO_ENABLED=0 go build \
-    -trimpath \
-    -ldflags="-s -w -X github.com/komari-monitor/komari-agent/update.CurrentVersion=${VERSION}" \
-    -o komari-agent .
-
-# ==========================================
-# 第二阶段：运行环境 (Final Image)
 # 基于 open-webui:main-slim
 # ==========================================
 FROM ghcr.io/open-webui/open-webui:latest-slim
@@ -45,7 +15,7 @@ RUN apt-get update && \
 # 升级 nltk 以修复 CVE-2025-14009 (Zip Slip 漏洞)
 RUN pip install --no-cache-dir --upgrade "nltk>=3.9.3"
 
-COPY --from=builder /src/komari-agent /app/komari-agent
+COPY --from=ghcr.io/komari-monitor/komari-agent:latest /app/komari-agent /app/komari-agent
 COPY entrypoint.sh /app/entrypoint.sh
 
 RUN chmod +x /app/entrypoint.sh
